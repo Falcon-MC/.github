@@ -30,6 +30,8 @@ Learn more on the website: **[falcon-mc.github.io](https://falcon-mc.github.io)*
 - Own RakNet implementation and a NetherNet (WebRTC) transport
 - Vanilla-like world generation with 3D biomes, aquifers, caves and ore veins
 - Redstone, pistons, fire, TNT, portals and the vanilla game rules
+- Random ticks, crop growth, tree growth, leaf decay, falling blocks and liquid physics
+- Vanilla command set: world editing, entity spawning, player and chat commands
 - Behavior pack support with custom items, blocks and actors, and a QuickJS scripting API
 
 ## Repositories
@@ -39,6 +41,11 @@ Learn more on the website: **[falcon-mc.github.io](https://falcon-mc.github.io)*
 | [Falcon](https://github.com/Falcon-MC/Falcon) | The server: world, gameplay, commands, generation and scripting | [![CI](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml) |
 | [Protocol](https://github.com/Falcon-MC/Protocol) | Bedrock packets, network types, NBT and binary streams | [![CI](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml) |
 | [Network](https://github.com/Falcon-MC/Network) | Transport layer: RakNet, NetherNet (WebRTC), compression and login verification | [![CI](https://github.com/Falcon-MC/Network/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Network/actions/workflows/ci.yml) |
+| [NBT](https://github.com/Falcon-MC/NBT) | NBT tags and binary streams, shared by the protocol and world storage | |
+| [BedrockData](https://github.com/Falcon-MC/BedrockData) | Block palette, recipes, item tags, biomes and voxel shapes, versioned by protocol | |
+| [BlockStateUpdater](https://github.com/Falcon-MC/BlockStateUpdater) | Upgrade schemas that bring old block states up to the current version | |
+| [DataGen](https://github.com/Falcon-MC/DataGen) | Generates the game data above from a dedicated server | |
+| [Pterodactyl](https://github.com/Falcon-MC/Pterodactyl) | Pterodactyl egg for hosting panels | |
 | [falcon-mc.github.io](https://github.com/Falcon-MC/falcon-mc.github.io) | Source of the [website](https://falcon-mc.github.io) | |
 
 ## Getting started
