@@ -11,7 +11,7 @@
 
 <p align="center">
 	<a href="https://falcon-mc.github.io"><img src="https://img.shields.io/badge/website-falcon--mc.github.io-2ea44f" alt="Website"></a>
-	<img src="https://img.shields.io/badge/minecraft-v1.26.50%20(Bedrock)-56383E" alt="Minecraft">
+	<img src="https://img.shields.io/badge/minecraft-v1.26.51%20(Bedrock)-56383E" alt="Minecraft">
 	<img src="https://img.shields.io/badge/protocol-2193-blue" alt="Protocol">
 	<img src="https://img.shields.io/badge/language-C%2B%2B17-00599C" alt="C++17">
 	<img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey" alt="Platform">
@@ -24,25 +24,15 @@ install: the server ships as a single self-contained executable.
 
 Learn more on the website: **[falcon-mc.github.io](https://falcon-mc.github.io)**.
 
-## Highlights
-
-- Overworld, Nether and End, each with its own world storage, entities and block systems
-- Own RakNet implementation and a NetherNet (WebRTC) transport
-- Vanilla-like world generation with 3D biomes, aquifers, caves and ore veins
-- Redstone, pistons, fire, TNT, portals and the vanilla game rules
-- Random ticks, crop growth, tree growth, leaf decay, falling blocks and liquid physics
-- Vanilla command set: world editing, entity spawning, player and chat commands
-- Behavior pack support with custom items, blocks and actors, and a QuickJS scripting API
-
 ## Repositories
 
 | Repository | Description | Build |
 |---|---|---|
 | [Falcon](https://github.com/Falcon-MC/Falcon) | The server: world, gameplay, commands, generation and scripting | [![CI](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml) |
-| [Protocol](https://github.com/Falcon-MC/Protocol) | Bedrock packets, network types, NBT and binary streams | [![CI](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml) |
+| [Protocol](https://github.com/Falcon-MC/Protocol) | Bedrock packets and network types | [![CI](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml) |
 | [Network](https://github.com/Falcon-MC/Network) | Transport layer: RakNet, NetherNet (WebRTC), compression and login verification | [![CI](https://github.com/Falcon-MC/Network/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Network/actions/workflows/ci.yml) |
 | [NBT](https://github.com/Falcon-MC/NBT) | NBT tags and binary streams, shared by the protocol and world storage | |
-| [BedrockData](https://github.com/Falcon-MC/BedrockData) | Block palette, recipes, item tags, biomes and voxel shapes, versioned by protocol | |
+| [BedrockData](https://github.com/Falcon-MC/BedrockData) | Block palette, recipes, item tags, biomes, voxel shapes and loot tables, versioned by protocol | |
 | [BlockStateUpdater](https://github.com/Falcon-MC/BlockStateUpdater) | Upgrade schemas that bring old block states up to the current version | |
 | [DataGen](https://github.com/Falcon-MC/DataGen) | Generates the game data above from a dedicated server | |
 | [Pterodactyl](https://github.com/Falcon-MC/Pterodactyl) | Pterodactyl egg for hosting panels | |
@@ -56,5 +46,5 @@ Each binary comes with a `.sha256` checksum. To build it yourself, follow the in
 
 ## License
 
-Falcon, Protocol and Network are licensed under the
+Falcon, Protocol, Network and NBT are licensed under the
 [GNU Lesser General Public License v3.0](https://github.com/Falcon-MC/Falcon/blob/main/LICENSE).
