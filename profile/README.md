@@ -35,7 +35,6 @@ Learn more on the website: **[falcon-mc.github.io](https://falcon-mc.github.io)*
 | [BedrockData](https://github.com/Falcon-MC/BedrockData) | Block palette, recipes, item tags, biomes, voxel shapes and loot tables, versioned by protocol | |
 | [BlockStateUpdater](https://github.com/Falcon-MC/BlockStateUpdater) | Upgrade schemas that bring old block states up to the current version | |
 | [leveldb](https://github.com/Falcon-MC/leveldb) | LevelDB with the zlib compression formats used by Bedrock worlds | |
-| [DataGen](https://github.com/Falcon-MC/DataGen) | Generates the game data above from a dedicated server | |
 | [Pterodactyl](https://github.com/Falcon-MC/Pterodactyl) | Pterodactyl egg for hosting panels | |
 | [falcon-mc.github.io](https://github.com/Falcon-MC/falcon-mc.github.io) | Source of the [website](https://falcon-mc.github.io) | |
 
