@@ -1,0 +1,73 @@
+name: Falcon rules
+
+on:
+  workflow_call:
+    secrets:
+      AUTOMATION_APP_ID:
+        required: true
+      AUTOMATION_APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  rules:
+    name: Check Falcon rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create bot token
+        id: token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Checkout rules
+        uses: actions/checkout@v4
+        with:
+          repository: Falcon-MC/.github
+          path: .falcon-rules
+
+      - name: Run rules
+        id: rules
+        continue-on-error: true
+        env:
+          RULES_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          RULES_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RULES_REPORT: ${{ runner.temp }}/rules-report.md
+        run: python3 .falcon-rules/scripts/falcon_rules.py
+
+      - name: Comment on pull request
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          REPORT: ${{ runner.temp }}/rules-report.md
+          PR: ${{ github.event.pull_request.number }}
+          CLEAN: ${{ steps.rules.outputs.clean }}
+        run: |
+          existing=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" --paginate \
+            --jq '[.[] | select(.body | startswith("<!-- falcon-rules -->"))][0].id // empty')
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${existing}" -F body=@"$REPORT" > /dev/null
+          elif [ "$CLEAN" != "true" ]; then
+            gh api -X POST "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" -F body=@"$REPORT" > /dev/null
+          fi
+
+      - name: Comment on commit
+        if: github.event_name == 'push' && steps.rules.outputs.failed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          REPORT: ${{ runner.temp }}/rules-report.md
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments" -F body=@"$REPORT" > /dev/null
+
+      - name: Fail on broken rules
+        if: steps.rules.outputs.failed == 'true'
+        run: exit 1
