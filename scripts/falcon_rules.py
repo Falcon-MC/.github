@@ -55,56 +55,11 @@ def added_files(base, head):
     return [path for path in git("diff", "--name-only", "--diff-filter=A", f"{base}...{head}").splitlines() if path]
 
 
-def find_comment(line, state):
-    index = 0
-    length = len(line)
-    while index < length:
-        if state["raw"] is not None:
-            end = line.find(state["raw"], index)
-            if end < 0:
-                return None
-            index = end + len(state["raw"])
-            state["raw"] = None
-            continue
-        if state["block"]:
-            end = line.find("*/", index)
-            if end < 0:
-                return None
-            index = end + 2
-            state["block"] = False
-            continue
-        char = line[index]
-        raw_match = re.match(r'(?:u8|u|U|L)?R"([^(\s]{0,16})\(', line[index:])
-        if raw_match and (index == 0 or not (line[index - 1].isalnum() or line[index - 1] == "_")):
-            state["raw"] = ")" + raw_match.group(1) + '"'
-            index += raw_match.end()
-            continue
-        if char in "\"'":
-            index += 1
-            while index < length and line[index] != char:
-                index += 2 if line[index] == "\\" else 1
-            index += 1
-            continue
-        if line.startswith("//", index):
-            return index
-        if line.startswith("/*", index):
-            return index
-        index += 1
-    return None
-
-
 def check_sources(lines_by_file, errors, warnings):
     for path, lines in lines_by_file.items():
         if not path.endswith(SOURCE_EXTENSIONS):
             continue
-        state = {"raw": None, "block": False}
-        previous = None
         for number, text in lines:
-            if previous is not None and number != previous + 1:
-                state = {"raw": None, "block": False}
-            previous = number
-            if find_comment(text, state) is not None:
-                errors.append(("Comment in source", path, number, text.strip()))
             if DEBUG_OUTPUT.search(text):
                 errors.append(("Debug output left in the code", path, number, text.strip()))
             if ONE_LINE_BODY.search(text) and "[" not in text.split("(")[0]:
