@@ -25,13 +25,13 @@ jobs:
           repositories: ${{ github.event.repository.name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Checkout rules
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: Falcon-MC/.github
           path: .falcon-rules
