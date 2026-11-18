@@ -42,6 +42,7 @@ jobs:
         env:
           RULES_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
           RULES_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          RULES_RELEASE_PROMOTION: ${{ github.event_name == 'pull_request' && github.repository == 'Falcon-MC/Falcon' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'dev' && github.base_ref == 'main' }}
           RULES_REPORT: ${{ runner.temp }}/rules-report.md
         run: python3 .falcon-rules/scripts/falcon_rules.py
 

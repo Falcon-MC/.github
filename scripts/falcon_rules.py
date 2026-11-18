@@ -6,7 +6,8 @@ import sys
 SOURCE_EXTENSIONS = (".c", ".cc", ".cpp", ".h", ".hpp", ".inl")
 COMMIT_TYPES = "feat|fix|perf|refactor|docs|chore|ci|build|test|style|revert"
 COMMIT_TITLE = re.compile(r"^(" + COMMIT_TYPES + r")(\([a-z0-9._-]+\))?!?: [a-z0-9]")
-DEBUG_OUTPUT = re.compile(r"\bLOG_DEBUG\s*\(|std::cerr\b|\bprintf\s*\(")
+DEBUG_OUTPUT = re.compile(r"\bLOG_DEBUG\s*\(|\bprintf\s*\(")
+STDERR_OUTPUT = re.compile(r"\bstd::cerr\b")
 ONE_LINE_BODY = re.compile(r"\)\s*(const\s*)?(noexcept\s*)?(override\s*)?(final\s*)?\{\s*[^{}\s][^{}]*;\s*\}\s*;?\s*$")
 ORDERED_FILE = "src/Protocol/MinecraftPackets.cpp"
 ORDERED_PATTERNS = (
@@ -59,8 +60,10 @@ def check_sources(lines_by_file, errors, warnings):
     for path, lines in lines_by_file.items():
         if not path.endswith(SOURCE_EXTENSIONS):
             continue
+        # Test executables report assertion failures on stderr.
+        allow_stderr = path.startswith("Falcon.Server/tests/")
         for number, text in lines:
-            if DEBUG_OUTPUT.search(text):
+            if DEBUG_OUTPUT.search(text) or (not allow_stderr and STDERR_OUTPUT.search(text)):
                 errors.append(("Debug output left in the code", path, number, text.strip()))
             if ONE_LINE_BODY.search(text) and "[" not in text.split("(")[0]:
                 warnings.append(("Function body on one line", path, number, text.strip()))
@@ -156,7 +159,9 @@ def main():
     check_sources(lines_by_file, errors, warnings)
     check_ordering(lines_by_file, head, errors)
     check_directories(added_files(base, head), errors)
-    check_commits(base, head, errors)
+    # A release promotes existing history from the integration branch.
+    if os.environ.get("RULES_RELEASE_PROMOTION") != "true":
+        check_commits(base, head, errors)
 
     report = render(errors, warnings)
     with open(os.environ.get("RULES_REPORT", "rules-report.md"), "w", encoding="utf-8") as output:
