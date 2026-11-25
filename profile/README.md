@@ -28,9 +28,13 @@ Learn more on the website: **[falcon-mc.github.io](https://falcon-mc.github.io)*
 
 | Repository | Description | Build |
 |---|---|---|
-| [Falcon](https://github.com/Falcon-MC/Falcon) | The server: world, gameplay, commands, generation, scripting and plugins | [![CI](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml) |
-| [Protocol](https://github.com/Falcon-MC/Protocol) | Bedrock packets and network types | [![CI](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Protocol/actions/workflows/ci.yml) |
-| [Network](https://github.com/Falcon-MC/Network) | Transport layer: RakNet, NetherNet (WebRTC), compression and login verification | [![CI](https://github.com/Falcon-MC/Network/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Network/actions/workflows/ci.yml) |
+| [Falcon](https://github.com/Falcon-MC/Falcon) | The server: world, gameplay, commands, generation, scripting and plugins. It also holds the libraries below | [![CI](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml/badge.svg)](https://github.com/Falcon-MC/Falcon/actions/workflows/ci.yml) |
+| [Falcon.Protocol](https://github.com/Falcon-MC/Falcon/tree/dev/Falcon.Protocol) | Bedrock packets and network types | |
+| [Falcon.Network](https://github.com/Falcon-MC/Falcon/tree/dev/Falcon.Network) | Transport layer: RakNet, NetherNet (WebRTC), compression and login verification | |
+| [Falcon.Shared](https://github.com/Falcon-MC/Falcon/tree/dev/Falcon.Shared) | NBT, binary streams, JSON, math and logging | |
+| [BedrockData](https://github.com/Falcon-MC/BedrockData) | Game data files, versioned by protocol | |
+| [BlockStateUpdater](https://github.com/Falcon-MC/BlockStateUpdater) | Block state upgrade schemas | |
+| [PluginAPI](https://github.com/Falcon-MC/PluginAPI) | Plugin API | |
 
 ## Getting started
 
@@ -40,5 +44,5 @@ Each binary comes with a `.sha256` checksum. To build it yourself, follow the in
 
 ## License
 
-Falcon, Protocol and Network are licensed under the
+Falcon is licensed under the
 [GNU Lesser General Public License v3.0](https://github.com/Falcon-MC/Falcon/blob/main/LICENSE).
