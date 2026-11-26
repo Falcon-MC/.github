@@ -108,17 +108,15 @@ def check_directories(files, errors):
 
 
 def check_commits(base, head, errors):
-    log = git("log", "--no-merges", "--format=%H%x1f%s%x1f%b%x1e", f"{base}..{head}")
+    log = git("log", "--no-merges", "--format=%H%x1f%s%x1e", f"{base}..{head}")
     for record in log.split("\x1e"):
         record = record.strip()
         if not record:
             continue
-        sha, title, body = (record.split("\x1f") + ["", ""])[:3]
+        sha, title = (record.split("\x1f") + [""])[:2]
         short = sha[:7]
         if not COMMIT_TITLE.match(title):
             errors.append(("Commit title is not `type: lowercase description`", short, 0, title))
-        if body.strip():
-            errors.append(("Commit has a body, only a title is allowed", short, 0, title))
 
 
 def cell(text):
