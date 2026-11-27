@@ -4,9 +4,9 @@ on:
   workflow_call:
     secrets:
       AUTOMATION_APP_ID:
-        required: true
+        required: false
       AUTOMATION_APP_PRIVATE_KEY:
-        required: true
+        required: false
 
 permissions:
   contents: read
@@ -16,14 +16,6 @@ jobs:
     name: Check Falcon rules
     runs-on: ubuntu-latest
     steps:
-      - name: Create bot token
-        id: token
-        uses: actions/create-github-app-token@v3
-        with:
-          app-id: ${{ secrets.AUTOMATION_APP_ID }}
-          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
-          repositories: ${{ github.event.repository.name }}
-
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
@@ -46,8 +38,31 @@ jobs:
           RULES_REPORT: ${{ runner.temp }}/rules-report.md
         run: python3 .falcon-rules/scripts/falcon_rules.py
 
+      - name: Publish rules summary
+        env:
+          REPORT: ${{ runner.temp }}/rules-report.md
+        run: |
+          if [ -f "$REPORT" ]; then
+            cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Check bot credentials
+        id: credentials
+        env:
+          BOT_CONFIGURED: ${{ secrets.AUTOMATION_APP_ID != '' && secrets.AUTOMATION_APP_PRIVATE_KEY != '' }}
+        run: echo "available=$BOT_CONFIGURED" >> "$GITHUB_OUTPUT"
+
+      - name: Create bot token
+        id: token
+        if: steps.credentials.outputs.available == 'true'
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+
       - name: Comment on pull request
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.token.outputs.token != '' && steps.rules.outputs.clean != ''
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
           REPORT: ${{ runner.temp }}/rules-report.md
@@ -63,12 +78,12 @@ jobs:
           fi
 
       - name: Comment on commit
-        if: github.event_name == 'push' && steps.rules.outputs.failed == 'true'
+        if: github.event_name == 'push' && steps.token.outputs.token != '' && steps.rules.outputs.failed == 'true'
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
           REPORT: ${{ runner.temp }}/rules-report.md
         run: gh api -X POST "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments" -F body=@"$REPORT" > /dev/null
 
       - name: Fail on broken rules
-        if: steps.rules.outputs.failed == 'true'
+        if: steps.rules.outcome == 'failure'
         run: exit 1
